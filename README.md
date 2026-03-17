@@ -1,22 +1,40 @@
-# Personal Stack
+# slow-kratos — Personal AI Stack
 
-A comprehensive guide to my containerized personal development and AI stack, with links to official repositories and documentation.
+A containerized personal AI infrastructure stack for local LLM inference, workflow automation, and MCP-based tool integration.
+
+> This is my home lab. For how I apply this stack in production ops workflows, see my [professional repos](https://github.com/arjkul#repos).
+
+---
 
 ## Services Overview
 
 | Service | Purpose | Port | Status | Docs |
-|---------|---------|------|--------|------|
+|---|---|---|---|---|
 | [Ollama](#ollama) | Local LLM inference engine | 11434 | Running | [Repo](https://github.com/ollama/ollama) |
 | [Open WebUI](#open-webui) | Web interface for Ollama & LLMs | 3000 | Running | [Repo](https://github.com/open-webui/open-webui) |
 | [n8n](#n8n) | Workflow automation & API orchestration | 5678 | Running | [Repo](https://github.com/n8n-io/n8n) |
-| [MCP Gateway](#mcp-gateway) | Docker's Model Context Protocol gateway | - | Running (×2) | [Repo](https://github.com/docker/mcp-gateway) |
-| [Tailscale](#tailscale) | Secure mesh VPN | - | Running | [Repo](https://github.com/tailscale/tailscale) |
+| [MCP Gateway](#mcp-gateway) | Docker's Model Context Protocol gateway | — | Running (×2) | [Repo](https://github.com/docker/mcp-gateway) |
+| [Tailscale](#tailscale) | Secure mesh VPN | — | Running | [Repo](https://github.com/tailscale/tailscale) |
+
+---
+
+## Why This Stack
+
+This setup lets me:
+
+- **Run models locally** — Llama, Mistral, Neural Chat and others via Ollama, without API costs or data leaving the machine
+- **Prototype automations fast** — n8n connects to any API with minimal code; I use it to test workflow ideas before building them properly in Python
+- **Experiment with MCP** — Docker's MCP Gateway gives me a local sandbox for testing Model Context Protocol integrations before deploying them in production (e.g. Claude Code + internal tools at work)
+- **Access everything remotely** — Tailscale creates a private mesh so I can reach Open WebUI and n8n from anywhere without port forwarding
+
+This is the infrastructure layer. The automation layer — where this thinking gets applied to real business problems — lives in [`ai-ops-tooling`](https://github.com/arjkul/ai-ops-tooling).
 
 ---
 
 ## Services
 
 ### Ollama
+
 **Local LLM inference engine**
 
 Ollama allows you to run large language models locally on your machine. Pull and run models like Llama, Mistral, Neural Chat, and more.
@@ -38,6 +56,7 @@ docker run -d --gpus=all -p 11434:11434 --name ollama ollama/ollama
 ---
 
 ### Open WebUI
+
 **Web interface for Ollama & multiple LLM providers**
 
 Open WebUI provides a ChatGPT-like interface for local and remote LLMs, including Ollama, OpenAI, Anthropic, and more.
@@ -45,7 +64,6 @@ Open WebUI provides a ChatGPT-like interface for local and remote LLMs, includin
 - **Image**: `ghcr.io/open-webui/open-webui:cuda` (CUDA-enabled)
 - **Port**: `3000`
 - **Official Repo**: https://github.com/open-webui/open-webui
-- **Docker Hub**: https://hub.docker.com/r/open-webui/open-webui
 - **Use Cases**:
   - User-friendly chat interface for Ollama
   - Support for multiple LLM backends
@@ -57,6 +75,7 @@ Open WebUI provides a ChatGPT-like interface for local and remote LLMs, includin
 ---
 
 ### n8n
+
 **Workflow automation & API orchestration**
 
 n8n is a low-code workflow automation platform for integrating services, APIs, and automating repetitive tasks.
@@ -64,7 +83,6 @@ n8n is a low-code workflow automation platform for integrating services, APIs, a
 - **Image**: `docker.n8n.io/n8nio/n8n`
 - **Port**: `5678`
 - **Official Repo**: https://github.com/n8n-io/n8n
-- **Docker Hub**: https://hub.docker.com/r/n8nio/n8n
 - **Use Cases**:
   - Workflow automation between tools
   - API orchestration and integration
@@ -73,12 +91,15 @@ n8n is a low-code workflow automation platform for integrating services, APIs, a
 
 **Access**: `http://localhost:5678`
 
+> **Note**: n8n is where I prototype automations locally before rebuilding them as proper Python scripts for production use. See [`ai-ops-tooling`](https://github.com/arjkul/ai-ops-tooling) for the production versions.
+
 ---
 
 ### MCP Gateway
+
 **Docker's Model Context Protocol gateway**
 
-MCP Gateway enables communication between AI applications and tools/data sources via the Model Context Protocol. Supports LLMs to access external resources through standardized interfaces.
+MCP Gateway enables communication between AI applications and tools/data sources via the Model Context Protocol.
 
 - **Image**: `docker/mcp-gateway`
 - **Official Repo**: https://github.com/docker/mcp-gateway
@@ -86,41 +107,39 @@ MCP Gateway enables communication between AI applications and tools/data sources
 - **Use Cases**:
   - Connect LLMs to external tools and data
   - Standardized context protocol for AI applications
-  - Extensible gateway for model interactions
-  - Bridge between Docker and AI models
+  - Local sandbox for MCP integration testing
+
+> Running two instances to test different MCP server configurations in parallel.
 
 ---
 
 ### Tailscale
+
 **Secure mesh VPN**
 
 Tailscale creates a private mesh network between your devices, enabling secure remote access without port forwarding or complex networking setup.
 
 - **Image**: `tailscale/tailscale:latest`
 - **Official Repo**: https://github.com/tailscale/tailscale
-- **Documentation**: https://tailscale.com/docs
 - **Use Cases**:
-  - Secure remote access to your stack
+  - Secure remote access to the full stack
   - Private networking between devices
-  - VPN without configuration hassle
-  - Access Open WebUI and n8n remotely
+  - Access Open WebUI and n8n from anywhere
 
 ---
 
 ## Quick Start
 
-Clone this repository and start all services:
-
 ```bash
-git clone <your-repo-url>
-cd personal-stack
+git clone https://github.com/arjkul/slow-kratos
+cd slow-kratos
 docker compose up -d
 ```
 
 Access the services:
 - **Open WebUI**: http://localhost:3000
 - **n8n**: http://localhost:5678
-- **Ollama**: http://localhost:11434
+- **Ollama API**: http://localhost:11434
 
 ---
 
@@ -128,21 +147,35 @@ Access the services:
 
 Each service can be customized via environment variables or volume mounts. See `docker-compose.yml` for current configuration.
 
-### Common Customizations:
-- **Ollama models**: Pull models with `docker exec ollama ollama pull <model>`
+### Common Customizations
+
+- **Ollama models**: `docker exec ollama ollama pull <model>`
 - **Open WebUI settings**: Configure LLM backends via the web interface
 - **n8n workflows**: Create workflows in the n8n UI
-- **Tailscale auth**: Run `docker exec tailscale tailscale up` to authenticate
+- **Tailscale auth**: `docker exec tailscale tailscale up`
 
 ---
 
-## Documentation Links
+## How This Connects to Professional Work
 
-- **Ollama**: https://github.com/ollama/ollama
-- **Open WebUI**: https://github.com/open-webui/open-webui
-- **n8n**: https://github.com/n8n-io/n8n
-- **MCP Gateway**: https://github.com/docker/mcp-gateway
-- **Tailscale**: https://github.com/tailscale/tailscale
+This home stack directly informs how I build AI tooling professionally:
+
+| Home (slow-kratos) | Production ([ai-ops-tooling](https://github.com/arjkul/ai-ops-tooling)) |
+|---|---|
+| Ollama + Open WebUI for local model testing | Claude API (Anthropic) for production LLM calls |
+| n8n for rapid workflow prototyping | Python scripts for production automation |
+| MCP Gateway (local sandbox) | Claude Code + Anthropic MCP in production |
+| Tailscale for private access | Internal VPN / corporate network |
+
+The pattern: prototype locally with open-source tools, validate the approach, then rebuild for production with the right reliability and security properties.
+
+---
+
+## Related Repos
+
+- [`ai-ops-tooling`](https://github.com/arjkul/ai-ops-tooling) — Production AI automation (Claude/Gemini) for warehouse ops
+- [`warehouse-ops-intelligence`](https://github.com/arjkul/warehouse-ops-intelligence) — BI system built on top of the same automation thinking
+- [`pm-data-stack-templates`](https://github.com/arjkul/pm-data-stack-templates) — Frameworks including an AI tool evaluation template
 
 ---
 
