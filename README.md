@@ -8,7 +8,7 @@ A containerized personal AI infrastructure stack for local LLM inference, workfl
 
 ## Services Overview
 
-| Service | Purpose | Port | Status | Docs |
+| Service | Purpose |  Docs |
 |---|---|---|---|---|
 | [Ollama](#ollama) | Local LLM inference engine | [Repo](https://github.com/ollama/ollama) |
 | [Open WebUI](#open-webui) | Web interface for Ollama & LLMs |  [Repo](https://github.com/open-webui/open-webui) |
