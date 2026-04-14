@@ -10,11 +10,11 @@ A containerized personal AI infrastructure stack for local LLM inference, workfl
 
 | Service | Purpose | Port | Status | Docs |
 |---|---|---|---|---|
-| [Ollama](#ollama) | Local LLM inference engine | 11434 | Running | [Repo](https://github.com/ollama/ollama) |
-| [Open WebUI](#open-webui) | Web interface for Ollama & LLMs | 3000 | Running | [Repo](https://github.com/open-webui/open-webui) |
-| [n8n](#n8n) | Workflow automation & API orchestration | 5678 | Running | [Repo](https://github.com/n8n-io/n8n) |
-| [MCP Gateway](#mcp-gateway) | Docker's Model Context Protocol gateway | — | Running (×2) | [Repo](https://github.com/docker/mcp-gateway) |
-| [Tailscale](#tailscale) | Secure mesh VPN | — | Running | [Repo](https://github.com/tailscale/tailscale) |
+| [Ollama](#ollama) | Local LLM inference engine | [Repo](https://github.com/ollama/ollama) |
+| [Open WebUI](#open-webui) | Web interface for Ollama & LLMs |  [Repo](https://github.com/open-webui/open-webui) |
+| [n8n](#n8n) | Workflow automation & API orchestration |  [Repo](https://github.com/n8n-io/n8n) |
+| [MCP Gateway](#mcp-gateway) | Docker's Model Context Protocol gateway | [Repo](https://github.com/docker/mcp-gateway) |
+| [Tailscale](#tailscale) | Secure mesh VPN |  [Repo](https://github.com/tailscale/tailscale) |
 
 ---
 
